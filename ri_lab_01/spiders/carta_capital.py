@@ -37,6 +37,7 @@ class CartaCapitalSpider(scrapy.Spider):
             return response.css(query).get(default='').strip()
 
         yield {
-            'category': extract_with_css("a.category tag::text"),
-            'title': extract_with_css("h3.eltdf-pt-one-title::text"),
+            'category': extract_with_css("a.category::text"),
+            'title': extract_with_css("a.eltdf-pt-link::text"),
+            'sub-title': extract_with_css("p.eltdf-post-except::text")
         }
