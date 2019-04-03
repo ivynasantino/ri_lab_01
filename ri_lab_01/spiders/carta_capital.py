@@ -21,11 +21,22 @@ class CartaCapitalSpider(scrapy.Spider):
         #
         # inclua seu código aqui
         #
+
+        for href in response.css("div.eltdf-pt-one-item a::attr(href)"):
+            print(href)
+            yield response.follow(href, self.parse_post, meta = {'url': response.url})
+        
         page = response.url.split("/")[-2]
         filename = 'quotes-%s.html' % page
         with open(filename, 'wb') as f:
             f.write(response.body)
         self.log('Saved file %s' % filename)
-        #
-        #
-        #
+    
+    def parse_post(self, response):
+        def extract_with_css(query):
+            return response.css(query).get(default='').strip()
+
+        yield {
+            'category': extract_with_css("a.category tag::text"),
+            'title': extract_with_css("h3.eltdf-pt-one-title::text"),
+        }
