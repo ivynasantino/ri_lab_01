@@ -18,12 +18,10 @@ class CartaCapitalSpider(scrapy.Spider):
         self.start_urls = list(data.values())
 
     def parse(self, response):
-        #
-        # inclua seu código aqui
-        #
-        div = "div.eltdf-pt-one-item a::attr(href)"
-        div2 = "div.eltdf-bnl-inner a::attr(href)"
-        for href in response.css(div):
+       
+        #div_principal = "div.eltdf-pt-one-item a::attr(href)"
+        div_principal = "div.eltdf-container-inner a::attr(href)"
+        for href in response.css(div_principal):
             print(href)
             yield response.follow(href, self.parse_post, meta = {'url': response.url})
         
@@ -38,11 +36,11 @@ class CartaCapitalSpider(scrapy.Spider):
             return response.css(query).get(default='').strip()
 
         yield {
-            'category': extract_with_css("a.category::text"),
-            'title': extract_with_css("a.eltdf-pt-link::text"),
-            'sub-title': extract_with_css("div.wpb_wrapper > h3::text"),
+            'categoria': extract_with_css("div.eltdf-post-info-category > a::text"),
+            'titulo': extract_with_css("a.eltdf-pt-link::text"),
+            'subtitulo': extract_with_css("div.wpb_wrapper > h3::text"),
             'url': response.url,
             'autor': extract_with_css("a.eltdf-post-info-author-link::text"),
-            'data': extract_with_css("a::text"),
+            'data': extract_with_css("div.eltdf-post-info-date > a::text"),
             'texto': extract_with_css("div.eltdf-post-text-inner > p::text"),
         }
