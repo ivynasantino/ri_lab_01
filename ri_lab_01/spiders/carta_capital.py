@@ -33,11 +33,13 @@ class CartaCapitalSpider(scrapy.Spider):
     def parse_post(self, response):
         def extract_with_css(query):
             '''
+            Return extraction of a results
             '''
             return response.css(query).get(default='').strip()
 
         def extract_with_css_all(query):
             '''
+            Return extraction of all results
             '''
             return response.css(query).getall()
 
