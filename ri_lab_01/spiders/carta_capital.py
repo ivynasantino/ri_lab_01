@@ -21,7 +21,6 @@ class CartaCapitalSpider(scrapy.Spider):
        
         div_principal = "div.eltdf-container-inner a::attr(href)"
         for href in response.css(div_principal):
-            print(href)
             yield response.follow(href, self.parse_post, meta = {'url': response.url})
         
         page = response.url.split("/")[-2]
