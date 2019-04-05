@@ -19,7 +19,6 @@ class CartaCapitalSpider(scrapy.Spider):
 
     def parse(self, response):
        
-        #div_principal = "div.eltdf-pt-one-item a::attr(href)"
         div_principal = "div.eltdf-container-inner a::attr(href)"
         for href in response.css(div_principal):
             print(href)
@@ -33,7 +32,14 @@ class CartaCapitalSpider(scrapy.Spider):
     
     def parse_post(self, response):
         def extract_with_css(query):
+            '''
+            '''
             return response.css(query).get(default='').strip()
+
+        def extract_with_css_all(query):
+            '''
+            '''
+            return response.css(query).getall()
 
         yield {
             'categoria': extract_with_css("div.eltdf-post-info-category > a::text"),
@@ -42,5 +48,5 @@ class CartaCapitalSpider(scrapy.Spider):
             'url': response.url,
             'autor': extract_with_css("a.eltdf-post-info-author-link::text"),
             'data': extract_with_css("div.eltdf-post-info-date > a::text"),
-            'texto': extract_with_css("div.eltdf-post-text-inner > p::text"),
+            'texto': extract_with_css_all("div.eltdf-post-text-inner > a::text, div.eltdf-post-text-inner > p::text")
         }
